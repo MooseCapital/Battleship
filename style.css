@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Rubik, serif ;
+    color: var(--main-font-white);
+    font-weight: 500;
+}
+:root {
+/*background greys*/
+--darkest-bg: #2e3440;
+--less-dark-bg: #3b4252;
+--lighter-bg: #434c5e;
+--lightest-bg: #4c566a;
+
+/*white colors*/
+--grey-white: #d8dee9;
+--mid-white: #e5e9f0;
+--main-font-white: #eceff4;
+
+/*blues*/
+--nord-blue-darkest: #5e81ac;
+--nord-blue-mid: #81a1c1;
+--nord-blue-aqua: #88c0d0;
+--nord-bluegreen: #8fbcbb;
+
+/*other nord colors*/
+--nord-red: #bf616a;
+--nord-orange: #d08770;
+--nord-yellow: #ebcb8b;
+--nord-green: #a3be8c;
+--nord-purple: #b48ead;
+}
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    min-width: 100vw;
+    background-color: var(--darkest-bg);
+  /*  overflow-x: hidden;
+    overflow-y: hidden;*/
+}
+::selection {
+    background-color: var(--nord-blue-aqua);
+}
+@font-face {
+    font-family: "Rubik";
+    src: url("Rubik-VariableFont_wght.ttf") format("woff2");
+}
+
+.app {
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--darkest-bg);
+    display: grid;
+    align-content: start;
+    grid-template: auto 1fr / auto;
+
+
+}
+header {
+background-color: var(--less-dark-bg);
+font-size: 3rem;
+font-weight: 600;
+text-align: center;
+padding: 1rem 0;
+}
+
+main {
+display: grid;
+grid-auto-flow: column;
+align-content: center;
+justify-content: center;
+}
+.playergrid, .computergrid {
+background-color: var(--lighter-bg);
+height: 500px;
+width: 500px;
+margin: 0 8rem;
+}
