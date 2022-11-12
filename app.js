@@ -13,41 +13,22 @@ let gameData = (function () {
             let sunk = false;
             let length = Math.floor(Math.random() * 5) + 2; //random num 2-6, floor makes the random round down 5 to 4
             let coords = [];
+            let coordNum = Math.floor(Math.random() * 400) + 1;
+            let coord = `${typeOfPlayer}${coordNum}` ;
+            //let coordNums = [];
 
-
-            generateCoords(typeOfPlayer)
-            function generateCoords(typeOfPlayer) {
-                //random 1 coord, then see if it will hit the wall, if not continue . if then move it left or right
-                //might not need to put inside a function, maybe put in ship scope
-                let coordNum = Math.floor(Math.random() * 400) + 1;
-                let coord = `${typeOfPlayer}${coordNum}` ;
-                let testCoords = [];
-                //let coordNums = [];
-
-                for (let i = 0; i < length; i++) {
-                   if (i === 0) {
-                        testCoords.push(coord)
-                        //coordNums.push(coordNum);
-                   } else {
-                       coord = `${typeOfPlayer}${coordNum + i}`
-                        testCoords.push(coord);
-                        //coordNums.push(coordNum + i);
-                   }
-
-                   // testCoords.push();
-                }
-
-                // to make it so the ships do not cross over to the next line, we can make it divisible by 20
-                //and test if it includes that and the next num in coordNums array
-                coords = [...testCoords]
-               /* console.log(length)
-                console.log(coord)
-                console.log(testCoords)
-                console.log(coords)
-                console.log(coordNums)*/
-                //coords.push();
+            // to make it so the ships do not cross over to the next line, we can make it divisible by 20
+            //and test if it includes that and the next num in coordNums array
+            for (let i = 0; i < length; i++) {
+               if (i === 0) {
+                    coords.push(coord)
+                    //coordNums.push(coordNum);
+               } else {
+                   coord = `${typeOfPlayer}${coordNum + i}`
+                    coords.push(coord);
+                    //coordNums.push(coordNum + i);
+               }
             }
-
 
             function hit() {
                  return ++this.timesHit;
@@ -57,14 +38,15 @@ let gameData = (function () {
                 return this.sunk = this.length <= this.timesHit;
             }
 
-            return {length, timesHit, sunk, hit, isSunk, coords, generateCoords}
+            return {length, timesHit, sunk, hit, isSunk, coords}
         }
 
-        function gameBoard(typeOfPlayer) {  //pass in player or computer board which passes in a or b coords
-                let ships = []; //have for loop generating 6 ships above
+        function gameBoard(typeOfPlayer ) {  //A for user, B for computer
+                let ships = [];
                 let missedAttacks = [];
+
                 function placeShip(typeOfPlayer) {
-                    for (let i = 0; i < 6; i++) {
+                    for (let i = 0; i < 6; i++) {  //generate 6 ships, then add them to ships array
                         ships.push(ship(typeOfPlayer));
 
                     }
@@ -78,7 +60,7 @@ let gameData = (function () {
                 }
                 function receiveAttack(pickedCoords) {
                     ships.forEach((currentShip) => {
-                        if (pickedCoords === currentShip.coords) {
+                        if (pickedCoords === currentShip.coords) {  //get picked coords from classlist
                         // for each ship we need to test all the coords inside it, so another loop here
                             //ship of length 4 has 4 dif coordinates, we may need to loop to test each.
                             //will need to hit specific ship, add a hit() to it
@@ -88,7 +70,7 @@ let gameData = (function () {
                     })
                 }
 
-                return {placeShip, receiveAttack, ships, allSunk }
+                return {placeShip, receiveAttack, ships, allSunk, missedAttacks }
         }
 
         function player(isComputer = false) {
