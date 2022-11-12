@@ -7,30 +7,72 @@ import {re} from "@babel/core/lib/vendor/import-meta-resolve";
 
 let gameData = (function () {
 
-        let ship = function (length, timesHit = 0, sunk = false) {
+        function ship(typeOfPlayer) {
+            //typeOfPlayer will have A for user, B for computer
+            let timesHit = 0;
+            let sunk = false;
+            let length = Math.floor(Math.random() * 5) + 2; //random num 2-6, floor makes the random round down 5 to 4
             let coords = [];
-            function hit() {
-                 return ++this.timesHit   //do not need to return to see value in log, because we check it with timesHit, the function just adds to that.
-            }
 
-            function isSunk() {
-                return this.sunk = this.length <= this.timesHit;
-            }
-            function generateCoords() {
+
+            generateCoords(typeOfPlayer)
+            function generateCoords(typeOfPlayer) {
                 //random 1 coord, then see if it will hit the wall, if not continue . if then move it left or right
                 //might not need to put inside a function, maybe put in ship scope
-                coords.push();
+                let coordNum = Math.floor(Math.random() * 400) + 1;
+                let coord = `${typeOfPlayer}${coordNum}` ;
+                let testCoords = [];
+                //let coordNums = [];
+
+                for (let i = 0; i < length; i++) {
+                   if (i === 0) {
+                        testCoords.push(coord)
+                        //coordNums.push(coordNum);
+                   } else {
+                       coord = `${typeOfPlayer}${coordNum + i}`
+                        testCoords.push(coord);
+                        //coordNums.push(coordNum + i);
+                   }
+
+                   // testCoords.push();
+                }
+
+                // to make it so the ships do not cross over to the next line, we can make it divisible by 20
+                //and test if it includes that and the next num in coordNums array
+                coords = [...testCoords]
+               /* console.log(length)
+                console.log(coord)
+                console.log(testCoords)
+                console.log(coords)
+                console.log(coordNums)*/
+                //coords.push();
+            }
+
+
+            function hit() {
+                 return ++this.timesHit;
+            }
+
+            function isSunk() {  //run after every hit to see if a ship is sunk
+                return this.sunk = this.length <= this.timesHit;
             }
 
             return {length, timesHit, sunk, hit, isSunk, coords, generateCoords}
         }
 
-        let gameBoard = function () {
+        function gameBoard(typeOfPlayer) {  //pass in player or computer board which passes in a or b coords
                 let ships = []; //have for loop generating 6 ships above
                 let missedAttacks = [];
-                function placeShip(coords) {
+                function placeShip(typeOfPlayer) {
+                    for (let i = 0; i < 6; i++) {
+                        ships.push(ship(typeOfPlayer));
 
+                    }
+                    console.log(ships)
                 }
+                placeShip(typeOfPlayer);
+
+
                 function allSunk() {
                     //determine if all ships have been sunk, to be called after every attack to check
                 }
@@ -49,7 +91,7 @@ let gameData = (function () {
                 return {placeShip, receiveAttack, ships, allSunk }
         }
 
-        let player = function (isComputer = false) {
+        function player(isComputer = false) {
                 if (isComputer) {
 
                 } else {
@@ -59,23 +101,40 @@ let gameData = (function () {
             return {}
         }
 
-   return {ship, gameBoard, player }
+        function gameLoop(initialStart = false) {
+            let you = player();
+            let computer = player()
+
+        }
+
+   return {ship, gameBoard, player, gameLoop }
 })()
 
-let gameLoop = (function () {
-
-
-})()
 
 let dom = (function () {
+    let playerGrid = document.querySelector(".playergrid");
+    let computerGrid = document.querySelector(".computergrid");
+    let startBtn = document.querySelector(".bottom > button");
 
+    startBtn.addEventListener("click", () => {
+        gameData.gameLoop()
+    })
+
+    for (let i = 0; i < 400; i++) {
+        let div = document.createElement("div");
+        let div1 = document.createElement("div");
+        div.classList.add(`A${i + 1}`);
+        div1.classList.add(`B${i + 1}`);
+        playerGrid.appendChild(div);
+        computerGrid.appendChild(div1);
+    }
+
+    return {}
 })()
+gameData.gameBoard("A")
 
-let player1 = gameData.ship(3,1,false);
-console.log(player1.hit())
-console.log(player1.hit())
-console.log(player1.isSunk())
-console.log(player1)
+
+
 
 
 

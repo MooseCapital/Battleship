@@ -4,6 +4,7 @@
     font-family: Rubik, serif ;
     color: var(--main-font-white);
     font-weight: 500;
+    background-color: var(--darkest-bg);
 }
 :root {
 /*background greys*/
@@ -53,7 +54,7 @@ body {
     background-color: var(--darkest-bg);
     display: grid;
     align-content: start;
-    grid-template: auto 1fr / auto;
+    grid-template: auto 1fr 200px / auto;
 
 
 }
@@ -63,17 +64,76 @@ font-size: 3rem;
 font-weight: 600;
 text-align: center;
 padding: 1rem 0;
+white-space: nowrap;
 }
 
 main {
 display: grid;
 grid-auto-flow: column;
-align-content: center;
+align-content: end;
 justify-content: center;
 }
 .playergrid, .computergrid {
-background-color: var(--lighter-bg);
+
 height: 500px;
 width: 500px;
 margin: 0 8rem;
+display: grid;
+border-top: 1px solid var(--nord-blue-darkest);
+border-left: 1px solid var(--nord-blue-darkest);
+grid-template-columns: repeat(auto-fit, 25px);
+
 }
+.playergrid > div, .computergrid > div {
+/*border: 1px solid var(--nord-red);*/
+border-bottom: 1px solid var(--nord-blue-darkest);
+border-right: 1px solid var(--nord-blue-darkest);
+background: none;
+
+/*height: 25px;*/
+/*width: 25px;*/
+/*box-sizing: border-box;*/
+/*background-color: var(--less-dark-bg);*/
+}
+/*.playergrid > div:hover, */
+.computergrid > div:hover {
+    background-color: var(--lightest-bg);
+
+}
+.bottom {
+display: flex;
+justify-content: center;
+
+}
+.bottom > button {
+    border-radius: 0.25em;
+    background-color: var(--darkest-bg);
+    padding: 0.5rem 1.5rem;
+    color: var(--nord-blue-mid);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--lighter-bg);
+    height: max-content;
+    transition: 100ms ease-in ;
+    margin-top: 50px;
+
+}
+.bottom > button:hover {
+    color: var(--nord-blue-aqua);
+    /*border-color: var(--nord-blue-darkest);*/
+    background-color: var(--lighter-bg);
+}
+
+.bottom > button:active {
+    /*background-color: var(--nord-blue-darkest);*/
+    /*color: rgba(216, 222, 233, 0.5);*/
+}
+
+
+
+
+
+
+
+
