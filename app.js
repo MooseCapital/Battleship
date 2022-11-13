@@ -45,7 +45,7 @@ let gameData = (function () {
                 let ships = [];
                 let missedAttacks = [];
 
-                for (let i = 0; i < 6; i++) {
+                for (let i = 0; i < 2; i++) {  //for testing we want 1 ship
                     ships.push(ship(typeOfPlayer));
 
                 }
@@ -53,26 +53,38 @@ let gameData = (function () {
 
                 function allSunk() {
                     //determine if all ships have been sunk, to be called after every attack to check
-                }
-                function receiveAttack(e, pickedCoords) {
-                    ships.forEach((currentShip) => {
-                        console.log(currentShip.coords)
-                        currentShip.coords.forEach((coord) =>  {
-                            if (coord === pickedCoords) {
-                                currentShip.hit();
-                                currentShip.isSunk();
-                                e.target.classList.add("hit")
+                    for(let i = 0; i < ships.length; i++) {
+                        if (!ships[i].isSunk()) {
+                            return false
+                        }
+                    }
+                    return true;
 
-                                //need to remove every class before adding because we loop every ship
-                            } else {
-                                missedAttacks.push(pickedCoords)  //since we are looping for every ship, it is adding each num of ship to missedAttacks array
-                                e.target.classList.add("miss")
-                                //add class to dom to make div red
+                }
+                //when we find a hit, we can break,to keep .hit class, but on misses we need to search every single ship
+                function receiveAttack(e, pickedCoords) {
+                    for(let s = 0; s < ships.length; s++) {
+                         //possibly use the child for loop below that loops through coords, in an if statement, to see if its true
+                            for (let i = 0; i < ships[s].coords.length; i++) {
+                                if (pickedCoords === ships[s].coords[i]) {
+                                    e.target.classList.add(".hit")
+                                    return true
+                                } else {
+
+
+
+                                }
+
                             }
 
-                        })
-                         //get picked coords from data-coordinate attr
-                    })
+                            //  e.target.classList.add(".miss")
+                            //need to use .hit()  and push failed hits to missedAttacks.
+                            //also add class .hit and .miss
+                            e.target.classList.add(".hit")
+                    }
+                    missedAttacks.push(pickedCoords)
+
+
                 }
                 let testCoord = ships[0].coords[0];
             return { testCoord, receiveAttack, ships, allSunk, missedAttacks  }
@@ -125,9 +137,10 @@ let dom = (function () {
             console.log(e.target.getAttribute("data-coordinate")) //need to test data-attribute on change
 
             if (gameLoopDom.gameStarted) {
-                console.log( gameLoopDom.computerBoard)
+                console.log( gameLoopDom.computerBoard.ships)
                 //console.log( gameLoopDom.playerBoard)
                 gameLoopDom.computerBoard.receiveAttack(e, e.target.getAttribute("data-coordinate"));
+                console.log(gameLoopDom.computerBoard.allSunk());
             }
 
         }
