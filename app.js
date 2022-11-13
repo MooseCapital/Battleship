@@ -8,10 +8,10 @@ import {re} from "@babel/core/lib/vendor/import-meta-resolve";
 let gameData = (function () {
 
         function ship(typeOfPlayer) {
-            //typeOfPlayer will have A for user, B for computer
+
             let timesHit = 0;
             let sunk = false;
-            let length = Math.floor(Math.random() * 5) + 2; //random num 2-6, floor makes the random round down 5 to 4
+            let length = Math.floor(Math.random() * 5) + 2;
             let coords = [];
             let coordNum = Math.floor(Math.random() * 400) + 1;
             let coord = `${typeOfPlayer}${coordNum}` ;
@@ -41,36 +41,41 @@ let gameData = (function () {
             return {length, timesHit, sunk, hit, isSunk, coords}
         }
 
-        function gameBoard(typeOfPlayer ) {  //A for user, B for computer
+        function gameBoard(typeOfPlayer ) {
                 let ships = [];
                 let missedAttacks = [];
 
-                function placeShip(typeOfPlayer) {
-                    for (let i = 0; i < 6; i++) {  //generate 6 ships, then add them to ships array
-                        ships.push(ship(typeOfPlayer));
+                for (let i = 0; i < 6; i++) {
+                    ships.push(ship(typeOfPlayer));
 
-                    }
-                    console.log(ships)
                 }
-                placeShip(typeOfPlayer);
 
 
                 function allSunk() {
                     //determine if all ships have been sunk, to be called after every attack to check
                 }
-                function receiveAttack(pickedCoords) {
+                function receiveAttack(e, pickedCoords) {
                     ships.forEach((currentShip) => {
-                        if (pickedCoords === currentShip.coords) {  //get picked coords from classlist
-                        // for each ship we need to test all the coords inside it, so another loop here
-                            //ship of length 4 has 4 dif coordinates, we may need to loop to test each.
-                            //will need to hit specific ship, add a hit() to it
-                        } else {
+                        console.log(currentShip.coords)
+                        currentShip.coords.forEach((coord) =>  {
+                            if (coord === pickedCoords) {
+                                currentShip.hit();
+                                currentShip.isSunk();
+                                e.target.classList.add("hit")
 
-                        }
+                                //need to remove every class before adding because we loop every ship
+                            } else {
+                                missedAttacks.push(pickedCoords)  //since we are looping for every ship, it is adding each num of ship to missedAttacks array
+                                e.target.classList.add("miss")
+                                //add class to dom to make div red
+                            }
+
+                        })
+                         //get picked coords from data-coordinate attr
                     })
                 }
-
-                return {placeShip, receiveAttack, ships, allSunk, missedAttacks }
+                let testCoord = ships[0].coords[0];
+            return { testCoord, receiveAttack, ships, allSunk, missedAttacks  }
         }
 
         function player(isComputer = false) {
@@ -83,37 +88,66 @@ let gameData = (function () {
             return {}
         }
 
-        function gameLoop(initialStart = false) {
+        function gameLoop() {
             let you = player();
-            let computer = player()
+            let computer = player();
+            let gameStarted = true;
+                //when it is our turn, we would do from opposite viewpoint, such as computer.receiveAttack("B122"))
+            let playerBoard = gameBoard("A");
+            let computerBoard = gameBoard("B");
+            
+            function passInClassValue() {
+                //create receiveattack before going further
+            }
 
+            return {playerBoard, computerBoard, gameStarted}
         }
 
-   return {ship, gameBoard, player, gameLoop }
+   return {ship, gameBoard, player, gameLoop}
 })()
 
 
 let dom = (function () {
     let playerGrid = document.querySelector(".playergrid");
     let computerGrid = document.querySelector(".computergrid");
-    let startBtn = document.querySelector(".bottom > button");
+    let gameCounter = 0;
+    let gameLoopDom;
 
-    startBtn.addEventListener("click", () => {
-        gameData.gameLoop()
+    document.querySelector("body").addEventListener("click", (e) => {
+        if (e.target.closest(".bottom > button")) {
+            gameLoopDom = gameData.gameLoop();
+            e.target.innerText = "Reset Game";
+            //disable button for 500ms then settimeout to enable
+            //add class to make innertext reset game, then start game when its over
+        }
+
+        if (e.target.closest(".computergrid > div")) {
+            console.log(e.target.getAttribute("data-coordinate")) //need to test data-attribute on change
+
+            if (gameLoopDom.gameStarted) {
+                console.log( gameLoopDom.computerBoard)
+                //console.log( gameLoopDom.playerBoard)
+                gameLoopDom.computerBoard.receiveAttack(e, e.target.getAttribute("data-coordinate"));
+            }
+
+        }
+
     })
 
     for (let i = 0; i < 400; i++) {
         let div = document.createElement("div");
         let div1 = document.createElement("div");
-        div.classList.add(`A${i + 1}`);
-        div1.classList.add(`B${i + 1}`);
+        // div.classList.add(`A${i + 1}`);
+        // div1.classList.add(`B${i + 1}`);
+        div.setAttribute("data-coordinate",`A${i + 1}`);
+        div1.setAttribute("data-coordinate",`B${i + 1}`);
         playerGrid.appendChild(div);
         computerGrid.appendChild(div1);
     }
 
     return {}
 })()
-gameData.gameBoard("A")
+
 
 
 

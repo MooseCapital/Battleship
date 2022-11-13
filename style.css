@@ -129,7 +129,13 @@ justify-content: center;
     /*background-color: var(--nord-blue-darkest);*/
     /*color: rgba(216, 222, 233, 0.5);*/
 }
+.hit, .hit:hover {
+    background: var(--nord-green)!important;
+}
 
+.miss, .miss:hover {
+    background: var(--nord-red)!important;
+}
 
 
 
