@@ -63,28 +63,44 @@ let gameData = (function () {
                 }
                 //when we find a hit, we can break,to keep .hit class, but on misses we need to search every single ship
                 function receiveAttack(e, pickedCoords) {
-                    for(let s = 0; s < ships.length; s++) {
-                         //possibly use the child for loop below that loops through coords, in an if statement, to see if its true
-                            for (let i = 0; i < ships[s].coords.length; i++) {
-                                if (pickedCoords === ships[s].coords[i]) {
-                                    e.target.classList.add(".hit")
-                                    return true
+                        for (let ship of ships) {
+
+                            for (let coord of ship.coords) {
+                                if (coord === pickedCoords) {
+                                    if (e.target.classList.contains("miss")) {
+                                        e.target.classList.remove("miss")
+                                    }
+                                    ship.hit();
+                                    if (ship.isSunk()) {
+                                        //do something like display message of sunk ship
+                                    }
+                                    if (allSunk()) {
+                                        //end the game
+                                    }
+                                    e.target.classList.add("hit")
+                                    return
                                 } else {
-
-
-
+                                    if (e.target.classList.contains("hit")) {
+                                        e.target.classList.remove("hit")
+                                    }
+                                    e.target.classList.add("miss")
+                                    if (missedAttacks.includes(pickedCoords)) {
+                                        missedAttacks.splice( missedAttacks.indexOf(pickedCoords),1)
+                                    }
+                                    missedAttacks.push(pickedCoords)
                                 }
+
+                                //test if missedAttacks array contains ours picked, then delete them, and read so we do not get duplicates
 
                             }
 
-                            //  e.target.classList.add(".miss")
-                            //need to use .hit()  and push failed hits to missedAttacks.
-                            //also add class .hit and .miss
-                            e.target.classList.add(".hit")
-                    }
-                    missedAttacks.push(pickedCoords)
-
-
+                        }
+                    console.log(missedAttacks)
+                    //  e.target.classList.add(".miss")
+                    //need to use .hit()  and push failed hits to missedAttacks.
+                    //also add class .hit and .miss
+                    // e.target.classList.add(".hit")
+                    // missedAttacks.push(pickedCoords)
                 }
                 let testCoord = ships[0].coords[0];
             return { testCoord, receiveAttack, ships, allSunk, missedAttacks  }
@@ -140,7 +156,7 @@ let dom = (function () {
                 console.log( gameLoopDom.computerBoard.ships)
                 //console.log( gameLoopDom.playerBoard)
                 gameLoopDom.computerBoard.receiveAttack(e, e.target.getAttribute("data-coordinate"));
-                console.log(gameLoopDom.computerBoard.allSunk());
+                // console.log(gameLoopDom.computerBoard.allSunk());
             }
 
         }
