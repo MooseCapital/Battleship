@@ -43,13 +43,12 @@ let gameData = (function () {
 
         function gameBoard(typeOfPlayer ) {
                 let ships = [];
-                let missedAttacks = [];
+                let Attacks = [];
 
-                for (let i = 0; i < 2; i++) {  //for testing we want 1 ship
+                for (let i = 0; i < 6; i++) {  //for testing we want 1 ship
                     ships.push(ship(typeOfPlayer));
 
                 }
-
 
                 function allSunk() {
                     //determine if all ships have been sunk, to be called after every attack to check
@@ -78,32 +77,31 @@ let gameData = (function () {
                                         //end the game
                                     }
                                     e.target.classList.add("hit")
+                                    if (Attacks.includes(pickedCoords)) {
+                                        Attacks.splice(Attacks.indexOf(pickedCoords),1)
+                                    }
+                                    Attacks.push(pickedCoords)
                                     return
                                 } else {
                                     if (e.target.classList.contains("hit")) {
                                         e.target.classList.remove("hit")
                                     }
                                     e.target.classList.add("miss")
-                                    if (missedAttacks.includes(pickedCoords)) {
-                                        missedAttacks.splice( missedAttacks.indexOf(pickedCoords),1)
+                                    if (Attacks.includes(pickedCoords)) {
+                                        Attacks.splice(Attacks.indexOf(pickedCoords),1)
                                     }
-                                    missedAttacks.push(pickedCoords)
-                                }
+                                    Attacks.push(pickedCoords)
 
-                                //test if missedAttacks array contains ours picked, then delete them, and read so we do not get duplicates
+                                }
 
                             }
 
                         }
-                    console.log(missedAttacks)
-                    //  e.target.classList.add(".miss")
-                    //need to use .hit()  and push failed hits to missedAttacks.
-                    //also add class .hit and .miss
-                    // e.target.classList.add(".hit")
-                    // missedAttacks.push(pickedCoords)
+                    //console.log(Attacks)
+
                 }
                 let testCoord = ships[0].coords[0];
-            return { testCoord, receiveAttack, ships, allSunk, missedAttacks  }
+            return { testCoord, receiveAttack, ships, allSunk, Attacks  }
         }
 
         function player(isComputer = false) {
@@ -141,6 +139,23 @@ let dom = (function () {
     let gameCounter = 0;
     let gameLoopDom;
 
+    function isCoordUsed(coord) {
+        for (let randomcoord of gameLoopDom.playerBoard.Attacks) {
+            if (randomcoord === coord) {
+                return true
+            }
+        }
+    }
+    function computerClick() {
+        let simCoord = `A${Math.floor(Math.random() * 400) + 1}`;
+            if (isCoordUsed(simCoord)) {
+                computerClick()
+                return
+            }
+        console.log(simCoord)
+        document.querySelector(`.playergrid > div[data-coordinate=${simCoord}`).click()
+    }
+    
     document.querySelector("body").addEventListener("click", (e) => {
         if (e.target.closest(".bottom > button")) {
             gameLoopDom = gameData.gameLoop();
@@ -150,15 +165,26 @@ let dom = (function () {
         }
 
         if (e.target.closest(".computergrid > div")) {
-            console.log(e.target.getAttribute("data-coordinate")) //need to test data-attribute on change
+           // console.log(e.target.getAttribute("data-coordinate")) //need to test data-attribute on change
 
             if (gameLoopDom.gameStarted) {
                 console.log( gameLoopDom.computerBoard.ships)
                 //console.log( gameLoopDom.playerBoard)
                 gameLoopDom.computerBoard.receiveAttack(e, e.target.getAttribute("data-coordinate"));
-                // console.log(gameLoopDom.computerBoard.allSunk());
+                // make function inside listener that will simulate click for computer and call gameLoopDom.playerBoard.receiveAttack
             }
+            setTimeout(computerClick,1000)
 
+        }
+        if (e.target.closest(".playergrid > div")) {
+           // console.log(e.target.getAttribute("data-coordinate"))
+
+            if (gameLoopDom.gameStarted) {
+               console.log( gameLoopDom.playerBoard.ships)
+                //console.log( gameLoopDom.playerBoard)
+                gameLoopDom.playerBoard.receiveAttack(e, e.target.getAttribute("data-coordinate"));
+                // make function inside listener that will simulate click for computer and call gameLoopDom.playerBoard.receiveAttack
+            }
         }
 
     })

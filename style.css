@@ -81,7 +81,7 @@ margin: 0 8rem;
 display: grid;
 border-top: 1px solid var(--nord-blue-darkest);
 border-left: 1px solid var(--nord-blue-darkest);
-grid-template-columns: repeat(auto-fit, 25px);
+grid-template-columns: repeat(auto-fit, 50px);
 
 }
 .playergrid > div, .computergrid > div {
@@ -96,7 +96,7 @@ background: none;
 /*background-color: var(--less-dark-bg);*/
 }
 /*.playergrid > div:hover, */
-.computergrid > div:hover {
+.computergrid > div:hover, .playergrid > div:hover {
     background-color: var(--lightest-bg);
 
 }
