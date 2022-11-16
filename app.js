@@ -111,6 +111,7 @@ let gameData = (function () {
                                         Attacks.splice(Attacks.indexOf(pickedCoords),1)
                                     }
                                     Attacks.push(pickedCoords)
+                                    console.log(Attacks)
                                     return
                                 } else {
                                     if (e.target.classList.contains("hit")) {
@@ -151,9 +152,10 @@ let gameData = (function () {
                 //when it is our turn, we would do from opposite viewpoint, such as computer.receiveAttack("B122"))
             let playerBoard = gameBoard("A");
             let computerBoard = gameBoard("B");
-            
+                //we have loops for ship coords, and gameboard.ships, making sure they are not the same and over the limit
+                //now we NEED to take in the computers and users coordinate input, and make sure it is not already picked in attacks array
             function passInClassValue() {
-                //after generating the coords, test if any ships have the same coords, if so regenerate
+
             }
 
             return {playerBoard, computerBoard, gameStarted}
@@ -166,10 +168,6 @@ let gameData = (function () {
 let dom = (function () {
     let playerGrid = document.querySelector(".playergrid");
     let computerGrid = document.querySelector(".computergrid");
-    let playerGridDiv = document.querySelectorAll(".playergrid > div");
-    let computerGridDiv = document.querySelectorAll(".computergrid > div");
-    console.log(playerGridDiv)
-    console.log(computerGridDiv)
     let gameCounter = 0;
     let gameLoopDom;
 
@@ -186,7 +184,7 @@ let dom = (function () {
                 computerClick()
                 return
             }
-        console.log(simCoord)
+
         document.querySelector(`.playergrid > div[data-coordinate=${simCoord}`).click()
     }
     
@@ -196,12 +194,12 @@ let dom = (function () {
             e.target.innerText = "Reset Game";
 
             if (e.target.innerText === "Reset Game") {
-                console.log("reset innertext test")
 
-                playerGridDiv.forEach((div) => {
+
+                document.querySelectorAll(".playergrid > div").forEach((div) => {
                     div.className = "";
                 })
-                computerGridDiv.forEach((div) => {
+                document.querySelectorAll(".computergrid > div").forEach((div) => {
                     div.className = ""
                 })
             }
@@ -218,14 +216,14 @@ let dom = (function () {
                 gameLoopDom.computerBoard.receiveAttack(e, e.target.getAttribute("data-coordinate"));
                 // make function inside listener that will simulate click for computer and call gameLoopDom.playerBoard.receiveAttack
             }
-            setTimeout(computerClick,1000)
+            setTimeout(computerClick,500)
 
         }
         if (e.target.closest(".playergrid > div")) {
            // console.log(e.target.getAttribute("data-coordinate"))
 
             if (gameLoopDom.gameStarted) {
-               console.log( gameLoopDom.playerBoard.ships)
+
                 //console.log( gameLoopDom.playerBoard)
                 gameLoopDom.playerBoard.receiveAttack(e, e.target.getAttribute("data-coordinate"));
                 // make function inside listener that will simulate click for computer and call gameLoopDom.playerBoard.receiveAttack
@@ -241,8 +239,8 @@ let dom = (function () {
         // div1.classList.add(`B${i + 1}`);
         div.setAttribute("data-coordinate",`A${i + 1}`);
         div1.setAttribute("data-coordinate",`B${i + 1}`);
-        div.className = ""
-        div1.className = ""
+        div.className = "";
+        div1.className = "";
         playerGrid.appendChild(div);
         computerGrid.appendChild(div1);
     }
