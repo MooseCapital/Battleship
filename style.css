@@ -37,8 +37,8 @@ body {
     min-height: 100vh;
     min-width: 100vw;
     background-color: var(--darkest-bg);
-  /*  overflow-x: hidden;
-    overflow-y: hidden;*/
+  overflow-x: hidden;
+    /*overflow-y: hidden;*/
 }
 ::selection {
     background-color: var(--nord-blue-aqua);
@@ -54,7 +54,7 @@ body {
     background-color: var(--darkest-bg);
     display: grid;
     align-content: start;
-    grid-template: auto 1fr 200px / auto;
+    grid-template: auto 1fr 1fr 150px auto / auto;
 
 
 }
@@ -72,6 +72,23 @@ display: grid;
 grid-auto-flow: column;
 align-content: end;
 justify-content: center;
+}
+.gametext {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    font-size: 1.5rem;
+
+}
+.playerholder, .computerholder {
+display: grid;
+
+}
+.playertitle, .computertitle {
+text-align: center;
+font-size: 1.5rem;
+font-weight: 600;
+margin-bottom: 1rem;
 }
 .playergrid, .computergrid {
 
@@ -101,9 +118,9 @@ background: none;
 
 }
 .bottom {
-display: flex;
+display: grid;
 justify-content: center;
-
+align-content: space-between;
 }
 .bottom > button {
     border-radius: 0.25em;
@@ -116,7 +133,8 @@ justify-content: center;
     border: 1px solid var(--lighter-bg);
     height: max-content;
     transition: 100ms ease-in ;
-    margin-top: 50px;
+    margin-top: 30px;
+    width: max-content;
 
 }
 .bottom > button:hover {
@@ -136,8 +154,33 @@ justify-content: center;
 .miss, .miss:hover {
     background: var(--nord-red)!important;
 }
-
-
+.playership {
+    background: var(--lightest-bg)!important;
+}
+footer {
+    /*position: absolute;*/
+    /*bottom: 5px;*/
+    /*left: 0;*/
+    /*display: flex;*/
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    display: grid;
+    font-size: 18px;
+    grid-auto-flow: column;
+    margin-bottom: 20px;
+}
+.github-icon {
+    background-image: url("images/GitHub-Mark-32px.png");
+    height: 30px;
+    width: 30px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transition: transform 500ms;
+}
+.github-icon:hover {
+    transform: rotate(360deg);
+}
 
 
 

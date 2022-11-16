@@ -60,6 +60,8 @@ let gameData = (function () {
                     for (let ship of ships) {
                         for (let coord of ship.coords) {
                             let coordMatch = 0;
+
+
                             //for every coord, we need to loop back through every ship
                             for (let ship1 of ships) {
                                 for (let coord1 of ship1.coords) {
@@ -78,7 +80,19 @@ let gameData = (function () {
                         }
                     }
                 }
+            function showPlayerShips() {
 
+
+                if (typeOfPlayer === "A") {
+                    //if works, make function in dom module, to separate dom
+                    // document.querySelector(`.playergrid > div[data-coordinate=${coord}`).classList.add("playership");
+                    for (let ship of ships) {
+                        for (let coord of ship.coords) {
+                            document.querySelector(`.playergrid > div[data-coordinate=${coord}`).classList.add("playership")
+                        }
+                    }
+                }}
+            setTimeout(showPlayerShips, 10);
 
                 function allSunk() {
                     //determine if all ships have been sunk, to be called after every attack to check
@@ -99,25 +113,44 @@ let gameData = (function () {
                                     if (e.target.classList.contains("miss")) {
                                         e.target.classList.remove("miss")
                                     }
+                                    if (e.target.classList.contains("playership")) {
+                                        e.target.classList.remove("playership")
+                                    }
                                     ship.hit();
                                     if (ship.isSunk()) {
                                         //do something like display message of sunk ship
+                                        if (e.target.parentNode.className === "playergrid") {
+                                            //make text element , sunk ship
+                                            e.target.parentNode.parentNode.parentNode.parentNode.querySelector(".gametext").innerText = "Computer has sunk a ship"
+                                        } else if(e.target.parentNode.className === "computergrid") {
+                                            e.target.parentNode.parentNode.parentNode.parentNode.querySelector(".gametext").innerText = "Player has sunk a ship"
+                                        }
                                     }
                                     if (allSunk()) {
-                                        //end the game
+                                        if (e.target.parentNode.className === "playergrid") {
+                                            e.target.parentNode.parentNode.parentNode.parentNode.querySelector(".gametext").innerText = "Computer has sunk all ships, better luck next time";
+                                            e.target.parentNode.parentNode.parentNode.parentNode.querySelector(".bottom button").innerText = "Start Game";
+                                        } else if(e.target.parentNode.className === "computergrid") {
+                                            e.target.parentNode.parentNode.parentNode.parentNode.querySelector(".gametext").innerText = "Player has sunk all ships, Winner!";
+                                            e.target.parentNode.parentNode.parentNode.parentNode.querySelector(".bottom button").innerText = "Start Game";
+                                        }
                                     }
                                     e.target.classList.add("hit")
                                     if (Attacks.includes(pickedCoords)) {
                                         Attacks.splice(Attacks.indexOf(pickedCoords),1)
                                     }
                                     Attacks.push(pickedCoords)
-                                    console.log(Attacks)
+                                    //console.log(Attacks)
                                     return
                                 } else {
                                     if (e.target.classList.contains("hit")) {
                                         e.target.classList.remove("hit")
                                     }
+                                    if (e.target.classList.contains("playership")) {
+                                        e.target.classList.remove("playership")
+                                    }
                                     e.target.classList.add("miss")
+
                                     if (Attacks.includes(pickedCoords)) {
                                         Attacks.splice(Attacks.indexOf(pickedCoords),1)
                                     }
@@ -128,7 +161,8 @@ let gameData = (function () {
                             }
 
                         }
-                    console.log(Attacks)
+
+                    //console.log(Attacks)
 
                 }
 
@@ -192,17 +226,14 @@ let dom = (function () {
         if (e.target.closest(".bottom > button")) {
             gameLoopDom = gameData.gameLoop();
             e.target.innerText = "Reset Game";
+            document.querySelector(".gametext").innerText = "";
+            document.querySelectorAll(".playergrid > div").forEach((div) => {
+                div.className = "";
+            })
+            document.querySelectorAll(".computergrid > div").forEach((div) => {
+                div.className = ""
+            })
 
-            if (e.target.innerText === "Reset Game") {
-
-
-                document.querySelectorAll(".playergrid > div").forEach((div) => {
-                    div.className = "";
-                })
-                document.querySelectorAll(".computergrid > div").forEach((div) => {
-                    div.className = ""
-                })
-            }
             //disable button for 500ms then settimeout to enable
             //add class to make innertext reset game, then start game when its over
         }
@@ -211,7 +242,7 @@ let dom = (function () {
            // console.log(e.target.getAttribute("data-coordinate")) //need to test data-attribute on change
 
             if (gameLoopDom.gameStarted) {
-                console.log( gameLoopDom.computerBoard.ships)
+               // console.log( gameLoopDom.computerBoard.ships)
                 //console.log( gameLoopDom.playerBoard)
                 gameLoopDom.computerBoard.receiveAttack(e, e.target.getAttribute("data-coordinate"));
                 // make function inside listener that will simulate click for computer and call gameLoopDom.playerBoard.receiveAttack
@@ -239,8 +270,8 @@ let dom = (function () {
         // div1.classList.add(`B${i + 1}`);
         div.setAttribute("data-coordinate",`A${i + 1}`);
         div1.setAttribute("data-coordinate",`B${i + 1}`);
-        div.className = "";
-        div1.className = "";
+        //div.className = "";
+        //div1.className = "";
         playerGrid.appendChild(div);
         computerGrid.appendChild(div1);
     }
