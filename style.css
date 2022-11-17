@@ -113,7 +113,7 @@ background: none;
 /*background-color: var(--less-dark-bg);*/
 }
 /*.playergrid > div:hover, */
-.computergrid > div:hover, .playergrid > div:hover {
+.computergrid > div:hover {
     background-color: var(--lightest-bg);
 
 }
