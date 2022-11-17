@@ -158,17 +158,18 @@ align-content: space-between;
     background: var(--lightest-bg)!important;
 }
 footer {
-    /*position: absolute;*/
-    /*bottom: 5px;*/
+    position: absolute;
+    bottom: 10px;
     /*left: 0;*/
-    /*display: flex;*/
+    right: 10px;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    display: grid;
+   /* display: grid;
     font-size: 18px;
     grid-auto-flow: column;
-    margin-bottom: 20px;
+    margin-bottom: 20px;*/
 }
 .github-icon {
     background-image: url("images/GitHub-Mark-32px.png");
